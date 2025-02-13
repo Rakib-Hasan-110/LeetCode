@@ -1,0 +1,48 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+    if (!head || !head->next) return head;
+        ListNode* newHead = head->next; 
+        ListNode* prev = nullptr; 
+        ListNode* current = head;
+        while (current && current->next) {
+            ListNode* nextPair = current->next->next; 
+            ListNode* second = current->next;
+            second->next = current;
+            current->next = nextPair;
+            if (prev) {
+                prev->next = second;
+            }
+            prev = current;
+            current = nextPair;
+        }
+        return newHead;
+    }
+};
+ListNode* createList(const vector<int>& values) {
+    ListNode* dummy = new ListNode();
+    ListNode* current = dummy;
+    for (int value : values) {
+        current->next = new ListNode(value);
+        current = current->next;
+    }
+    return dummy->next;
+}
+void printList(ListNode* head) {
+    while (head) {
+        cout << head->val;
+        if (head->next) cout << "->";
+        head = head->next;
+    }
+    cout << endl;
+}
