@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int length = 0, i = s.length() - 1;
+        
+        // Ignore trailing spaces
+        while (i >= 0 && s[i] == ' ') i--;
+
+        // Count length of last word
+        while (i >= 0 && s[i] != ' ') {
+            length++;
+            i--;
+        }
+
+        return length;
+    }
+};
+
+int main() {
+    Solution sol;
+    cout << sol.lengthOfLastWord("Hello World") << endl;         // Output: 5
+    cout << sol.lengthOfLastWord("   fly me   to   the moon  ") << endl; // Output: 4
+    cout << sol.lengthOfLastWord("luffy is still joyboy") << endl; // Output: 6
+    return 0;
+}
