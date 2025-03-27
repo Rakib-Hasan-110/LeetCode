@@ -1,0 +1,41 @@
+class Solution {
+public:
+    string minWindow(string s, string t) {
+         if (s.empty() || t.empty()) return "";
+
+        unordered_map<char, int> targetFreq, windowFreq;
+        for (char c : t) targetFreq[c]++; 
+
+        int left = 0, right = 0, minLen = INT_MAX, startIdx = -1;
+        int required = targetFreq.size(), formed = 0;
+
+        while (right < s.size()) {
+            char c = s[right];
+            windowFreq[c]++;
+
+            if (targetFreq.count(c) && windowFreq[c] == targetFreq[c]) {
+                formed++;
+            }
+
+            while (left <= right && formed == required) {
+                char leftChar = s[left];
+
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    startIdx = left;
+                }
+
+                windowFreq[leftChar]--;
+                if (targetFreq.count(leftChar) && windowFreq[leftChar] < targetFreq[leftChar]) {
+                    formed--;
+                }
+
+                left++;
+            }
+
+            right++;
+        }
+
+        return startIdx == -1 ? "" : s.substr(startIdx, minLen);
+    }
+};
