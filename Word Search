@@ -1,0 +1,40 @@
+class Solution {
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+         int rows = board.size();
+        int cols = board[0].size();
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == word[0] && dfs(board, word, i, j, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+private:
+    bool dfs(vector<vector<char>>& board, string& word, int i, int j, int index) {
+        if (index == word.size()) return true; // Found the word
+        
+        // Check boundaries and if the character does not match
+        if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size() || board[i][j] != word[index]) 
+            return false;
+
+        // Temporarily mark the cell as visited
+        char temp = board[i][j];
+        board[i][j] = '#';
+
+        // Explore in all 4 directions
+        bool found = dfs(board, word, i + 1, j, index + 1) ||
+                     dfs(board, word, i - 1, j, index + 1) ||
+                     dfs(board, word, i, j + 1, index + 1) ||
+                     dfs(board, word, i, j - 1, index + 1);
+
+        // Restore the original value (backtrack)
+        board[i][j] = temp;
+
+        return found;
+    }
+};
