@@ -1,0 +1,36 @@
+struct ListNode {
+     int val;
+     ListNode *next;
+     ListNode() : val(0), next(nullptr) {}
+     ListNode(int x) : val(x), next(nullptr) {}
+     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ };
+ 
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+         if (!head || !head->next) return head;
+
+        ListNode* dummy = new ListNode(0); // Dummy node to handle edge cases
+        dummy->next = head;
+        ListNode* prev = dummy; // Pointer to track the last non-duplicate node
+
+        while (head) {
+            // Check for duplicates
+            if (head->next && head->val == head->next->val) {
+                // Skip all duplicates
+                while (head->next && head->val == head->next->val) {
+                    head = head->next;
+                }
+                // Remove the duplicate nodes
+                prev->next = head->next;
+            } else {
+                // Move prev pointer forward if no duplicates found
+                prev = prev->next;
+            }
+            head = head->next;
+        }
+        
+        return dummy->next;
+    }
+};
