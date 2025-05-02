@@ -1,0 +1,36 @@
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+class Solution {
+public:
+    void findPaths(TreeNode* root, int targetSum, vector<int>& path, vector<vector<int>>& result) {
+        if (!root) return;
+
+        // Add current node to path
+        path.push_back(root->val);
+        targetSum -= root->val;
+
+        // If it's a leaf node and targetSum is 0, store the path
+        if (!root->left && !root->right && targetSum == 0) {
+            result.push_back(path);
+        }
+
+        // Recur for left and right subtrees
+        findPaths(root->left, targetSum, path, result);
+        findPaths(root->right, targetSum, path, result);
+
+        // Backtrack: Remove last element before returning
+        path.pop_back();
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        vector<vector<int>> result;
+        vector<int> path;
+        findPaths(root, targetSum, path, result);
+        return result;
+    }
+};
