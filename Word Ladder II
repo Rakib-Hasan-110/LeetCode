@@ -1,0 +1,77 @@
+class Solution {
+public:
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> wordSet(wordList.begin(), wordList.end());
+        if (!wordSet.count(endWord)) return {};  // If endWord is not in list, return empty.
+
+        unordered_map<string, vector<string>> parents; // To store graph
+        unordered_set<string> currentLevel, nextLevel; // To track visited nodes per level
+        queue<string> q;
+        q.push(beginWord);
+        currentLevel.insert(beginWord);
+        bool found = false;
+
+        // BFS - Build the graph
+        while (!q.empty() && !found) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                string word = q.front();
+                q.pop();
+                wordSet.erase(word);  // Avoid revisiting
+                string original = word;
+
+                for (int j = 0; j < word.size(); j++) {
+                    char ch = word[j];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        if (c == ch) continue;
+                        word[j] = c;
+                        if (wordSet.count(word)) {
+                            parents[word].push_back(original);
+                            if (!nextLevel.count(word)) {
+                                q.push(word);
+                                nextLevel.insert(word);
+                            }
+                        }
+                    }
+                    word[j] = ch; // Restore original character
+                }
+            }
+
+            // Remove processed words from wordSet to avoid revisiting
+            for (const auto& word : nextLevel) {
+                wordSet.erase(word);
+            }
+
+            swap(currentLevel, nextLevel);
+            nextLevel.clear();
+
+            if (currentLevel.count(endWord)) {
+                found = true;
+            }
+        }
+
+        // If no path found, return empty list
+        if (!found) return {};
+
+        // DFS - Find all paths from beginWord to endWord
+        vector<vector<string>> results;
+        vector<string> path = {endWord};
+        dfs(endWord, beginWord, parents, path, results);
+        return results;
+    }
+
+private:
+    void dfs(string word, string& beginWord, unordered_map<string, vector<string>>& parents, vector<string>& path, vector<vector<string>>& results) {
+        if (word == beginWord) {
+            vector<string> temp = path;
+            reverse(temp.begin(), temp.end()); // Reverse path since we built it backwards
+            results.push_back(temp);
+            return;
+        }
+
+        for (const string& parent : parents[word]) {
+            path.push_back(parent);
+            dfs(parent, beginWord, parents, path, results);
+            path.pop_back(); 
+    }
+};
