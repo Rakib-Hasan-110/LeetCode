@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int minCut(string s) {
+         int n = s.size();
+        vector<vector<bool>> palindrome(n, vector<bool>(n, false));
+        vector<int> dp(n, 0);
+        
+        // Precompute palindrome table
+        for (int right = 0; right < n; ++right) {
+            for (int left = 0; left <= right; ++left) {
+                if (s[left] == s[right] && (right - left <= 2 || palindrome[left + 1][right - 1])) {
+                    palindrome[left][right] = true;
+                }
+            }
+        }
+        
+        // Compute minimum cuts
+        for (int j = 0; j < n; ++j) {
+            if (palindrome[0][j]) {
+                dp[j] = 0;  // No cuts needed
+            } else {
+                dp[j] = j;  // Maximum cuts possible
+                for (int i = 0; i < j; ++i) {
+                    if (palindrome[i + 1][j]) {
+                        dp[j] = min(dp[j], dp[i] + 1);
+                    }
+                }
+            }
+        }
+        
+        return dp[n - 1];
+    }
+};
