@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int result = 0;
+        for (int i = 0; i < 32; i++) {  // Iterate over each bit (0-31)
+            int count = 0;
+            for (int num : nums) {
+                if (num & (1 << i)) {  // Check if the i-th bit is set in num
+                    count++;
+                }
+            }
+            if (count % 3 != 0) {  // If bit count is not a multiple of 3, set it in result
+                result |= (1 << i);
+            }
+        }
+        return result;
+    }
+};
+    
