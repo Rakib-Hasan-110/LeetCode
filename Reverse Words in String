@@ -1,0 +1,25 @@
+class Solution {
+public:
+    string reverseWords(string s) {
+         istringstream iss(s);
+        string word;
+        vector<string> words;
+
+        // Extract words and ignore extra spaces
+        while (iss >> word) {
+            words.push_back(word);
+        }
+
+        // Reverse the vector of words
+        reverse(words.begin(), words.end());
+
+        // Join words with a single space
+        string result;
+        for (int i = 0; i < words.size(); ++i) {
+            if (i > 0) result += " ";
+            result += words[i];
+        }
+
+        return result;
+    }
+};
